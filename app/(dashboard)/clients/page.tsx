@@ -3,16 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
-import { Plus, Search, Mail, Phone, Building2, Loader2, Users, Filter, Eye, Pencil, ChevronRight } from "lucide-react";
+import { Plus, Search, Mail, Phone, Building2, Users, Filter, Eye, Pencil, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { 
   Client, 
   ClientType, 
   ClientStatus,
   CLIENT_TYPE_LABELS,
-  CLIENT_STATUS_LABELS,
-  CLIENT_STATUS_COLORS,
-  CLIENT_TYPE_COLORS
+  CLIENT_STATUS_LABELS
 } from "@/types/database";
 
 export default function ClientsPage() {

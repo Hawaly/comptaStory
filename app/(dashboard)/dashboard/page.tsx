@@ -5,11 +5,9 @@ import { Header } from "@/components/layout/Header";
 import { 
   TrendingUp, 
   TrendingDown, 
-  DollarSign,
   Calendar,
   FileText,
   User,
-  Loader2,
   ArrowUpRight,
   ArrowDownRight,
   Wallet,
@@ -293,7 +291,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white">Bilan Annuel {selectedYear}</h3>
-                <p className="text-sm text-slate-400">Récapitulatif de l'année</p>
+                <p className="text-sm text-slate-400">Récapitulatif de l&apos;année</p>
               </div>
             </div>
           </div>

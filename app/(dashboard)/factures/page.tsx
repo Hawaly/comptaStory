@@ -3,13 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
-import { Plus, Search, Calendar, User, Loader2, FileText, Filter, Eye, Send, CheckCircle, XCircle, Clock, ChevronRight } from "lucide-react";
+import { Plus, Search, Calendar, User, FileText, Filter, Eye, Send, CheckCircle, XCircle, Clock, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { 
   Invoice,
   InvoiceStatus,
-  INVOICE_STATUS_LABELS,
-  INVOICE_STATUS_COLORS
+  INVOICE_STATUS_LABELS
 } from "@/types/database";
 import { formatCurrency } from "@/lib/invoiceHelpers";
 

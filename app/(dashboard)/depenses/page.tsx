@@ -3,14 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
-import { Plus, Search, Calendar, FileText, Loader2, Receipt, Filter, RefreshCw, XCircle, TrendingDown, Eye } from "lucide-react";
+import { Plus, Search, Calendar, Receipt, Filter, RefreshCw, XCircle, TrendingDown, Eye } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { 
   Expense,
   ExpenseCategory,
   ExpenseType,
-  EXPENSE_TYPE_LABELS,
-  EXPENSE_TYPE_COLORS
+  EXPENSE_TYPE_LABELS
 } from "@/types/database";
 import { formatAmount } from "@/lib/expenseHelpers";
 

@@ -1,4 +1,4 @@
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts, PDFFont } from 'pdf-lib';
 import { Client, Mandat, Invoice, InvoiceItem, CompanySettings } from '@/types/database';
 import { formatCurrency, DEFAULT_TVA_RATE } from './invoiceHelpers';
 import fs from 'fs';
@@ -46,7 +46,7 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
     x: number,
     y: number,
     size: number,
-    font: any
+    font: PDFFont
   ) => {
     const w = font.widthOfTextAtSize(text, size);
     page.drawText(text, { x: x - w, y, size, font, color: black });

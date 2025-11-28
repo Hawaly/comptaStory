@@ -3,13 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
-import { Search, Calendar, User, Loader2, Briefcase, Filter, ChevronRight, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Search, Calendar, User, Briefcase, Filter, ChevronRight, Clock, XCircle } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { 
   Mandat,
   MandatStatus,
-  MANDAT_STATUS_LABELS,
-  MANDAT_STATUS_COLORS
+  MANDAT_STATUS_LABELS
 } from "@/types/database";
 
 type MandatWithClient = Mandat & {
