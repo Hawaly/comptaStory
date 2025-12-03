@@ -15,7 +15,7 @@ function NewMandatContent() {
     return (
       <>
         <Header title="Erreur" />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-red-50 border-2 border-red-300 rounded-lg p-6">
             <p className="text-red-900 font-semibold">
               Client ID manquant. Veuillez créer le mandat depuis la fiche client.
@@ -35,7 +35,7 @@ function NewMandatContent() {
   return (
     <>
       <Header title="Nouveau mandat" />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <Link
             href={`/clients/${clientId}`}

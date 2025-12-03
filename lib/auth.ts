@@ -23,6 +23,8 @@ export const SESSION_COOKIE_NAME = 'session';
 export interface SessionData {
   userId: string;
   username: string;
+  role?: string; // Role code de l'utilisateur (admin, client, staff)
+  roleId?: number; // Role ID (1 = admin, 2 = client, 3 = staff)
 }
 
 /**
@@ -51,6 +53,8 @@ export async function verifyToken(token: string): Promise<SessionData | null> {
     return {
       userId: payload.userId as string,
       username: payload.username as string,
+      role: payload.role as string | undefined,
+      roleId: payload.roleId as number | undefined,
     };
   } catch {
     // Token invalide ou expiré

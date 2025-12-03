@@ -16,10 +16,10 @@ export function Header({ title, subtitle }: HeaderProps) {
   });
 
   return (
-    <header className="sticky top-0 z-40 min-h-[5rem] bg-white/80 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
+    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 min-h-[4rem] sm:min-h-[5rem]">
       {/* Page Title - avec espace pour le bouton menu sur mobile */}
-      <div className="flex flex-col pl-12 lg:pl-0">
-        <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+      <div className="flex flex-col pl-14 lg:pl-0 min-w-0 flex-1">
+        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent truncate">
           {title}
         </h1>
         {subtitle ? (

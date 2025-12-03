@@ -5,7 +5,7 @@ export default function SettingsPage() {
   return (
     <>
       <Header title="Paramètres" subtitle="Configuration de votre application" />
-      <main className="p-8 animate-fade-in">
+      <main className="p-4 sm:p-6 lg:p-8 animate-fade-in">
         <div className="max-w-4xl space-y-6">
           {/* General Settings */}
           <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">

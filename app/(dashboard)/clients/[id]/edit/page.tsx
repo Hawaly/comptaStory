@@ -48,7 +48,7 @@ export default function EditClientPage() {
   return (
     <>
       <Header title="Modifier le client" />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         {/* Breadcrumb */}
         <div className="mb-6">
           <Link

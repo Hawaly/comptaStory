@@ -48,7 +48,7 @@ export default function EditMandatPage() {
   return (
     <>
       <Header title="Modifier le mandat" />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <Link
             href={`/mandats/${mandatId}`}

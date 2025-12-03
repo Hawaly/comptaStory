@@ -7,7 +7,7 @@ export default function NewExpensePage() {
   return (
     <>
       <Header title="Nouvelle dépense" />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <Link
             href="/depenses"

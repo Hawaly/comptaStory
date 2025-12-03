@@ -101,11 +101,13 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
   emitterY -= 13;
 
   if (settings.address) {
-    const address =
-      settings.address +
-      (settings.zip_code ? ', ' + settings.zip_code : '') +
-      (settings.city ? ' ' + settings.city : '');
-    page.drawText(address, { x: ml, y: emitterY, size: 10, font: fontNormal, color: black });
+    page.drawText(settings.address, { x: ml, y: emitterY, size: 10, font: fontNormal, color: black });
+    emitterY -= 13;
+  }
+
+  if (settings.zip_code || settings.city) {
+    const cityLine = (settings.zip_code || '') + ' ' + (settings.city || '');
+    page.drawText(cityLine.trim(), { x: ml, y: emitterY, size: 10, font: fontNormal, color: black });
     emitterY -= 13;
   }
 
@@ -119,10 +121,11 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
     emitterY -= 13;
   }
 
-  if (settings.tva_number) {
-    page.drawText('TVA: ' + settings.tva_number, { x: ml, y: emitterY, size: 10, font: fontNormal, color: black });
-    emitterY -= 20;
-  }
+  // TVA supprimée - ne plus afficher
+  // if (settings.tva_number) {
+  //   page.drawText('TVA: ' + settings.tva_number, { x: ml, y: emitterY, size: 10, font: fontNormal, color: black });
+  //   emitterY -= 20;
+  // }
 
   emitterY -= 10;
 
@@ -246,7 +249,7 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
   // =========================
   let clientY = paymentYBottom - 40; // un peu plus d’air sous le bloc gris
 
-  page.drawText('Facturer à', { x: ml, y: clientY, size: 13, font: fontBold, color: black });
+  page.drawText('Facturé à', { x: ml, y: clientY, size: 13, font: fontBold, color: black });
   clientY -= 18;
 
   const clientName = data.client.company_name || data.client.name;
@@ -331,18 +334,50 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
 
   let rowY = tableY - headerH - 12;
 
+  // Fonction pour découper le texte en lignes selon une largeur max
+  const wrapText = (text: string, maxWidth: number, font: PDFFont, fontSize: number): string[] => {
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+      
+      if (testWidth > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+    return lines;
+  };
+
+  const descMaxWidth = col1Width - 16; // largeur max pour la description (avec marges)
+
   data.items.forEach((item) => {
     if (rowY < mb + 80) return;
 
+    // Découper la description en lignes si nécessaire
+    const descLines = wrapText(item.description, descMaxWidth, fontNormal, 10);
     const lineY = rowY - 12;
 
-    // descriptions longues -> on coupe proprement
-    let desc = item.description;
-    if (desc.length > 80) desc = desc.substring(0, 77) + '...';
+    // Dessiner chaque ligne de description
+    descLines.forEach((line, idx) => {
+      page.drawText(line, { 
+        x: col1 + 8, 
+        y: lineY - (idx * 12), 
+        size: 10, 
+        font: fontNormal, 
+        color: black 
+      });
+    });
 
-    page.drawText(desc, { x: col1 + 8, y: lineY, size: 10, font: fontNormal, color: black });
-
-    // quantité à droite
+    // quantité à droite (alignée avec la première ligne)
     const qtyStr = item.quantity.toFixed(2);
     const qtyW = fontNormal.widthOfTextAtSize(qtyStr, 10);
     page.drawText(qtyStr, {
@@ -378,8 +413,9 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
       color: black,
     });
 
-    // un peu plus d’air entre les lignes
-    rowY -= 26;
+    // Ajuster l'espacement selon le nombre de lignes de description
+    const rowHeight = Math.max(26, 14 + (descLines.length * 12));
+    rowY -= rowHeight;
   });
 
   // =========================

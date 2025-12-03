@@ -8,6 +8,7 @@ import { MandatsList } from "@/components/mandats/MandatsList";
 import { ContractsList } from "@/components/contracts/ContractsList";
 import { GenerateContractButton } from "@/components/contracts/GenerateContractButton";
 import { ExpensesList } from "@/components/expenses/ExpensesList";
+import { FullClientDashboard } from "@/components/clients/FullClientDashboard";
 import { 
   ArrowLeft, 
   Edit, 
@@ -20,7 +21,9 @@ import {
   Briefcase,
   Receipt,
   Loader2,
-  User
+  User,
+  LayoutDashboard,
+  Target
 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { 
@@ -40,7 +43,8 @@ export default function ClientDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [activeTab, setActiveTab] = useState<"mandats" | "contrats" | "factures" | "depenses">("mandats");
+  const [showLegacyView, setShowLegacyView] = useState(false);
+  const [activeTab, setActiveTab] = useState<"dashboard" | "strategies" | "mandats" | "contrats" | "factures" | "depenses">("dashboard");
   const [contractsKey, setContractsKey] = useState(0);
 
   useEffect(() => {
@@ -104,7 +108,7 @@ export default function ClientDetailPage() {
     return (
       <>
         <Header title="Chargement..." />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
             <p className="text-gray-600">Chargement du client...</p>
@@ -118,7 +122,7 @@ export default function ClientDetailPage() {
     return (
       <>
         <Header title="Erreur" />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
             <p className="text-red-800">{error || "Client non trouvé"}</p>
             <Link
@@ -133,12 +137,73 @@ export default function ClientDetailPage() {
     );
   }
 
+  // Vue Dashboard moderne par défaut
+  if (!showLegacyView) {
+    return (
+      <>
+        <Header title={`Dashboard - ${client.name}`} />
+        <main className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
+          {/* Barre d'actions supérieure */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <Link
+              href="/clients"
+              className="flex items-center text-gray-900 hover:text-brand-orange transition-colors font-semibold"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour aux clients
+            </Link>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLegacyView(true)}
+                className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-bold"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Vue Classic</span>
+              </button>
+
+              <button
+                onClick={() => router.push(`/clients/${clientId}/edit`)}
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold"
+              >
+                <Edit className="w-4 h-4" />
+                <span>Modifier</span>
+              </button>
+
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Suppression...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Supprimer</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Dashboard complet */}
+          <FullClientDashboard client={client} />
+        </main>
+      </>
+    );
+  }
+
+  // Vue Legacy avec onglets (optionnelle)
   return (
     <>
       <Header title={client.name} />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         {/* Breadcrumb + Actions */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
           <Link
             href="/clients"
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
@@ -147,10 +212,10 @@ export default function ClientDetailPage() {
             Retour à la liste des clients
           </Link>
 
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             <Link
               href={`/clients/${clientId}/edit`}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold"
             >
               <Edit className="w-4 h-4" />
               <span>Modifier</span>
@@ -275,8 +340,30 @@ export default function ClientDetailPage() {
         {/* Onglets */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Navigation des onglets */}
-          <div className="border-b-2 border-gray-200">
-            <nav className="flex -mb-px">
+          <div className="border-b-2 border-gray-200 overflow-x-auto">
+            <nav className="flex -mb-px min-w-max">
+              <button
+                onClick={() => setActiveTab("dashboard")}
+                className={`flex items-center space-x-2 px-6 py-4 border-b-[3px] font-bold text-sm transition-colors ${
+                  activeTab === "dashboard"
+                    ? "border-brand-orange text-brand-orange bg-brand-orange/10"
+                    : "border-transparent text-gray-900 hover:text-brand-orange hover:bg-gray-50"
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Dashboard</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("strategies")}
+                className={`flex items-center space-x-2 px-6 py-4 border-b-[3px] font-bold text-sm transition-colors ${
+                  activeTab === "strategies"
+                    ? "border-brand-orange text-brand-orange bg-brand-orange/10"
+                    : "border-transparent text-gray-900 hover:text-brand-orange hover:bg-gray-50"
+                }`}
+              >
+                <Target className="w-4 h-4" />
+                <span>Stratégies</span>
+              </button>
               <button
                 onClick={() => setActiveTab("mandats")}
                 className={`flex items-center space-x-2 px-6 py-4 border-b-[3px] font-bold text-sm transition-colors ${
@@ -326,6 +413,47 @@ export default function ClientDetailPage() {
 
           {/* Contenu des onglets */}
           <div className="p-6">
+            {activeTab === "dashboard" && (
+              <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-8 text-center">
+                <LayoutDashboard className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Dashboard Moderne Disponible
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Le dashboard moderne offre une expérience améliorée avec visualisations et aperçus dynamiques
+                </p>
+                <button
+                  onClick={() => setShowLegacyView(false)}
+                  className="px-6 py-3 bg-brand-orange text-white rounded-xl font-bold hover:bg-brand-orange-dark transition-colors"
+                >
+                  Voir le Dashboard Moderne
+                </button>
+              </div>
+            )}
+
+            {activeTab === "strategies" && (
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-gray-900">Stratégies Social Media</h3>
+                  <Link
+                    href={`/clients/${client.id}/strategies`}
+                    className="px-4 py-2 bg-brand-orange text-white rounded-lg hover:bg-brand-orange-dark transition-colors font-bold"
+                  >
+                    Voir toutes les stratégies →
+                  </Link>
+                </div>
+                <p className="text-gray-600 mb-4">
+                  Gérez les stratégies de contenu social media pour ce client.
+                </p>
+                <Link
+                  href={`/clients/${client.id}/strategies`}
+                  className="inline-block text-brand-orange hover:text-brand-orange-dark font-semibold"
+                >
+                  Accéder aux stratégies →
+                </Link>
+              </div>
+            )}
+
             {activeTab === "mandats" && (
               <MandatsList clientId={client.id} />
             )}

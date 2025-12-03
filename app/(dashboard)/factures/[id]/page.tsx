@@ -144,7 +144,7 @@ export default function InvoiceDetailPage() {
     return (
       <>
         <Header title="Chargement..." />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <Loader2 className="w-10 h-10 animate-spin text-blue-600 mx-auto mb-4" />
             <p className="text-gray-900 font-semibold">Chargement de la facture...</p>
@@ -158,7 +158,7 @@ export default function InvoiceDetailPage() {
     return (
       <>
         <Header title="Erreur" />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-red-50 border-2 border-red-300 rounded-lg p-6">
             <p className="text-red-900 font-semibold">{error || "Facture non trouvée"}</p>
             <Link href="/factures" className="inline-block mt-4 text-red-700 hover:text-red-900 font-bold">
@@ -173,9 +173,9 @@ export default function InvoiceDetailPage() {
   return (
     <>
       <Header title={invoice.invoice_number} />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         {/* Breadcrumb + Actions */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
           <Link
             href="/factures"
             className="flex items-center text-gray-900 hover:text-blue-700 transition-colors font-semibold"
@@ -184,10 +184,10 @@ export default function InvoiceDetailPage() {
             Retour aux factures
           </Link>
 
-          <div className="flex space-x-3">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
             <Link
               href={`/factures/${invoiceId}/edit`}
-              className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors font-bold"
+              className="flex items-center justify-center space-x-1 sm:space-x-2 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors font-bold text-sm"
             >
               <Edit className="w-4 h-4" />
               <span>Éditer</span>
@@ -196,17 +196,18 @@ export default function InvoiceDetailPage() {
             <button
               onClick={handleGeneratePDF}
               disabled={isGeneratingPDF}
-              className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+              className="flex items-center justify-center space-x-1 sm:space-x-2 bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-bold text-sm"
             >
               {isGeneratingPDF ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Génération...</span>
+                  <span className="hidden sm:inline">Génération...</span>
                 </>
               ) : (
                 <>
                   <FileText className="w-4 h-4" />
-                  <span>{invoice.pdf_path ? "Regénérer PDF" : "Générer PDF"}</span>
+                  <span className="hidden sm:inline">{invoice.pdf_path ? "Regénérer" : "Générer"}</span>
+                  <span className="sm:hidden">PDF</span>
                 </>
               )}
             </button>
@@ -216,32 +217,31 @@ export default function InvoiceDetailPage() {
                 href={`/api/invoices/${invoice.id}/download`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-bold"
+                className="flex items-center justify-center space-x-1 sm:space-x-2 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors font-bold text-sm"
               >
                 <Download className="w-4 h-4" />
-                <span>Télécharger PDF</span>
+                <span className="hidden sm:inline">Télécharger</span>
+                <span className="sm:hidden">DL</span>
               </a>
             )}
 
             <button
               onClick={() => {
-                // Générer un timestamp unique au moment du clic pour forcer le rechargement
                 const timestamp = Date.now();
                 const url = `/api/invoices/${invoice.id}/qr-bill?t=${timestamp}`;
-                console.log('🔄 Génération QR-bill - Timestamp:', timestamp);
                 window.open(url, '_blank', 'noopener,noreferrer');
               }}
-              className="flex items-center space-x-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors font-bold"
+              className="flex items-center justify-center space-x-1 sm:space-x-2 bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 transition-colors font-bold text-sm"
             >
               <QrCode className="w-4 h-4" />
-              <span>QR-Bill</span>
+              <span>QR</span>
             </button>
 
             {invoice.status !== 'payee' && invoice.status !== 'annulee' && (
               <button
                 onClick={handleMarkAsPaid}
                 disabled={isMarkingPaid}
-                className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+                className="col-span-2 sm:col-span-1 flex items-center justify-center space-x-1 sm:space-x-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-bold text-sm"
               >
                 {isMarkingPaid ? (
                   <>
@@ -251,7 +251,8 @@ export default function InvoiceDetailPage() {
                 ) : (
                   <>
                     <CheckCircle className="w-4 h-4" />
-                    <span>Marquer comme payée</span>
+                    <span className="hidden sm:inline">Marquer payée</span>
+                    <span className="sm:hidden">Payée</span>
                   </>
                 )}
               </button>
@@ -260,19 +261,17 @@ export default function InvoiceDetailPage() {
         </div>
 
         {/* Informations principales */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-2xl font-black text-gray-900 mb-3">
-                Facture {invoice.invoice_number}
-              </h1>
-              <span className={`inline-flex px-4 py-2 text-base rounded-full ${INVOICE_STATUS_COLORS[invoice.status]}`}>
-                {INVOICE_STATUS_LABELS[invoice.status]}
-              </span>
-            </div>
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
+          <div className="mb-4 sm:mb-6">
+            <h1 className="text-xl sm:text-2xl font-black text-gray-900 mb-2 sm:mb-3 break-words">
+              Facture {invoice.invoice_number}
+            </h1>
+            <span className={`inline-flex px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-full ${INVOICE_STATUS_COLORS[invoice.status]}`}>
+              {INVOICE_STATUS_LABELS[invoice.status]}
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {/* Client */}
             {invoice.client && (
               <div>
@@ -324,9 +323,25 @@ export default function InvoiceDetailPage() {
         </div>
 
         {/* Lignes de facture */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Détail de la facture</h2>
-          <div className="overflow-x-auto">
+          
+          {/* Vue mobile - cartes */}
+          <div className="sm:hidden space-y-3">
+            {items.map((item) => (
+              <div key={item.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <p className="font-semibold text-gray-900 mb-2">{item.description}</p>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Qté: {item.quantity}</span>
+                  <span className="text-gray-600">{formatCurrency(item.unit_price)}/u</span>
+                  <span className="font-black text-gray-900">{formatCurrency(item.total)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Vue desktop - tableau */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -363,18 +378,18 @@ export default function InvoiceDetailPage() {
         </div>
 
         {/* Totaux */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Totaux</h2>
-          <div className="space-y-3 max-w-md ml-auto">
+          <div className="space-y-3 sm:max-w-md sm:ml-auto">
             <div className="flex justify-between items-center pb-2">
-              <span className="text-gray-900 font-bold">Total HT :</span>
-              <span className="text-xl font-black text-gray-900">{formatCurrency(invoice.total_ht)}</span>
+              <span className="text-gray-900 font-bold text-sm sm:text-base">Total HT :</span>
+              <span className="text-lg sm:text-xl font-black text-gray-900">{formatCurrency(invoice.total_ht)}</span>
             </div>
             <div className="flex justify-between items-center pb-2">
-              <span className="text-gray-900 font-bold">
+              <span className="text-gray-900 font-bold text-sm sm:text-base">
                 TVA ({invoice.total_tva > 0 ? `${(DEFAULT_TVA_RATE * 100).toFixed(1)}%` : 'Exonéré'}) :
               </span>
-              <span className={`text-xl font-black ${invoice.total_tva > 0 ? 'text-gray-900' : 'text-gray-400'}`}>
+              <span className={`text-lg sm:text-xl font-black ${invoice.total_tva > 0 ? 'text-gray-900' : 'text-gray-400'}`}>
                 {formatCurrency(invoice.total_tva)}
               </span>
             </div>
@@ -384,8 +399,8 @@ export default function InvoiceDetailPage() {
               </div>
             )}
             <div className="flex justify-between items-center pt-2 border-t-[3px] border-gray-900">
-              <span className="text-lg font-black text-gray-900">Total TTC :</span>
-              <span className="text-3xl font-black text-blue-700">{formatCurrency(invoice.total_ttc)}</span>
+              <span className="text-base sm:text-lg font-black text-gray-900">Total TTC :</span>
+              <span className="text-2xl sm:text-3xl font-black text-blue-700">{formatCurrency(invoice.total_ttc)}</span>
             </div>
           </div>
         </div>

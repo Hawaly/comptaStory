@@ -12,7 +12,8 @@ import {
   Trash2,
   Calendar,
   Loader2,
-  User
+  User,
+  Share2
 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { 
@@ -105,7 +106,7 @@ export default function MandatDetailPage() {
     return (
       <>
         <Header title="Chargement..." />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <Loader2 className="w-10 h-10 animate-spin text-blue-600 mx-auto mb-4" />
             <p className="text-gray-900 font-semibold">Chargement du mandat...</p>
@@ -119,7 +120,7 @@ export default function MandatDetailPage() {
     return (
       <>
         <Header title="Erreur" />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-red-50 border-2 border-red-300 rounded-lg p-6">
             <p className="text-red-900 font-semibold">{error || "Mandat non trouvé"}</p>
             <Link
@@ -137,9 +138,9 @@ export default function MandatDetailPage() {
   return (
     <>
       <Header title={mandat.title} />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         {/* Breadcrumb */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
           <Link
             href={`/clients/${client.id}`}
             className="flex items-center text-gray-900 hover:text-blue-700 transition-colors font-semibold"
@@ -148,7 +149,14 @@ export default function MandatDetailPage() {
             Retour à {client.name}
           </Link>
 
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            <Link
+              href={`/mandats/${mandatId}/strategies`}
+              className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-bold"
+            >
+              <Share2 className="w-4 h-4" />
+              <span>Stratégies Social Media</span>
+            </Link>
             <Link
               href={`/mandats/${mandatId}/edit`}
               className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold"

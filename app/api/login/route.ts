@@ -12,18 +12,72 @@ export async function POST(request: NextRequest) {
     // Validation des champs
     if (!username || !password) {
       return NextResponse.json(
-        { error: 'Username et password sont requis' },
+        { error: 'Email et password sont requis' },
         { status: 400 }
       );
     }
 
-    // Recherche de l'utilisateur dans Supabase
+    // Recherche de l'utilisateur avec son rôle
+    // Utilise la vue user_with_details pour obtenir toutes les infos
     const { data: users, error: dbError } = await supabase
-      .from('app_user')
-      .select('id, username, password_hash, is_active')
-      .eq('username', username)
+      .from('user_with_details')
+      .select('user_id, email, role_id, role_code, role_name, redirect_path, client_id, client_name, is_active')
+      .eq('email', username)
       .eq('is_active', true)
       .limit(1);
+    
+    // Si la vue n'existe pas, utiliser une jointure manuelle
+    if (dbError && dbError.message.includes('does not exist')) {
+      const { data: usersJoin, error: joinError } = await supabase
+        .from('app_user')
+        .select(`
+          id,
+          email,
+          password_hash,
+          is_active,
+          client_id,
+          role:role_id (
+            id,
+            code,
+            name,
+            redirect_path
+          )
+        `)
+        .eq('email', username)
+        .eq('is_active', true)
+        .limit(1);
+      
+      if (joinError) {
+        console.error('Erreur Supabase (jointure):', joinError);
+        return NextResponse.json(
+          { error: 'Erreur lors de la connexion à la base de données' },
+          { status: 500 }
+        );
+      }
+      
+      // Adapter les données pour correspondre au format attendu
+      if (usersJoin && usersJoin.length > 0) {
+        const userData = usersJoin[0];
+        // Récupérer aussi le hash du mot de passe
+        const { data: hashData } = await supabase
+          .from('app_user')
+          .select('password_hash')
+          .eq('id', userData.id)
+          .single();
+        
+        return NextResponse.json({
+          success: true,
+          user: {
+            id: userData.id,
+            email: userData.email,
+            role_code: (userData.role as any)?.code,
+            role_name: (userData.role as any)?.name,
+            client_id: userData.client_id,
+          },
+          redirect_path: (userData.role as any)?.redirect_path || '/dashboard'
+        });
+      }
+    }
 
     // Gestion des erreurs de base de données
     if (dbError) {
@@ -44,8 +98,23 @@ export async function POST(request: NextRequest) {
 
     const user = users[0];
 
+    // Récupérer le password_hash depuis app_user (la vue ne le contient pas)
+    const { data: authData, error: authError } = await supabase
+      .from('app_user')
+      .select('password_hash')
+      .eq('id', user.user_id)
+      .single();
+
+    if (authError || !authData) {
+      console.error('Erreur récupération password_hash:', authError);
+      return NextResponse.json(
+        { error: 'Erreur d\'authentification' },
+        { status: 500 }
+      );
+    }
+
     // Comparaison du mot de passe avec bcrypt
-    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    const isPasswordValid = await bcrypt.compare(password, authData.password_hash);
 
     if (!isPasswordValid) {
       return NextResponse.json(
@@ -54,19 +123,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Création de la session
+    // Création de la session avec le rôle et role_id
     await createSession({
-      userId: user.id,
-      username: user.username,
+      userId: String(user.user_id), // Utiliser user_id de la vue
+      username: user.email,
+      role: user.role_code, // Ajouter le rôle dans la session
+      roleId: user.role_id, // Ajouter le role_id pour vérification (1 = admin)
     });
 
-    // Réponse de succès
+    // Réponse de succès avec redirection
     return NextResponse.json({
       success: true,
       user: {
-        id: user.id,
-        username: user.username,
+        id: user.user_id,
+        email: user.email,
+        role_code: user.role_code,
+        role_name: user.role_name,
+        role_id: user.role_id, // Ajouter role_id
+        client_id: user.client_id,
+        client_name: user.client_name,
       },
+      redirect_path: user.redirect_path, // Chemin de redirection selon le rôle
     });
 
   } catch (error) {

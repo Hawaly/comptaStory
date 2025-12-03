@@ -175,7 +175,7 @@ export function ExpenseForm({ expense, mode }: ExpenseFormProps) {
       )}
 
       {/* Informations de base */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-4">
           Informations de la dépense
         </h3>
@@ -272,7 +272,7 @@ export function ExpenseForm({ expense, mode }: ExpenseFormProps) {
 
       {/* Client/Mandat (si type = client_mandat) */}
       {formData.type === 'client_mandat' && (
-        <div className="bg-blue-50 rounded-lg border-2 border-blue-300 p-6">
+        <div className="bg-blue-50 rounded-lg border-2 border-blue-300 p-4 sm:p-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4">
             Association client/mandat
           </h3>
@@ -323,7 +323,7 @@ export function ExpenseForm({ expense, mode }: ExpenseFormProps) {
       )}
 
       {/* Catégorie */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-4">
           Catégorie
         </h3>
@@ -344,7 +344,7 @@ export function ExpenseForm({ expense, mode }: ExpenseFormProps) {
       </div>
 
       {/* Upload justificatif */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-4">
           Justificatif (PDF/Image)
         </h3>
@@ -401,7 +401,7 @@ export function ExpenseForm({ expense, mode }: ExpenseFormProps) {
       </div>
 
       {/* Notes */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-4">
           Notes
         </h3>
@@ -417,12 +417,12 @@ export function ExpenseForm({ expense, mode }: ExpenseFormProps) {
       </div>
 
       {/* Boutons d'action */}
-      <div className="flex justify-end space-x-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 sm:space-x-4">
         <button
           type="button"
           onClick={() => router.push("/depenses")}
           disabled={isLoading || uploadingFile}
-          className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-900 font-bold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+          className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-900 font-bold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
         >
           <X className="w-4 h-4" />
           <span>Annuler</span>
@@ -430,7 +430,7 @@ export function ExpenseForm({ expense, mode }: ExpenseFormProps) {
         <button
           type="submit"
           disabled={isLoading || uploadingFile}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 font-bold"
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 font-bold"
         >
           {isLoading || uploadingFile ? (
             <>

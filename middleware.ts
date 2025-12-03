@@ -41,13 +41,42 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // Si l'utilisateur est authentifié et essaie d'accéder à /login, rediriger vers dashboard
-  if (pathname === '/login') {
+  // Vérifier si c'est une route dashboard (admin uniquement)
+  const isDashboardRoute = pathname.startsWith('/dashboard') || 
+                           pathname.startsWith('/clients') || 
+                           pathname.startsWith('/factures') || 
+                           pathname.startsWith('/mandats') || 
+                           pathname.startsWith('/depenses') || 
+                           pathname.startsWith('/settings') || 
+                           pathname.startsWith('/taches');
+
+  // Vérifier si l'utilisateur est admin (role_id = 1)
+  const isAdmin = session.roleId === 1;
+
+  // Si route dashboard et pas admin (role_id !== 1), rediriger vers client-portal
+  if (isDashboardRoute && !isAdmin) {
+    const clientPortalUrl = new URL('/client-portal', request.url);
+    return NextResponse.redirect(clientPortalUrl);
+  }
+
+  // Si route client-portal et admin (role_id === 1), rediriger vers dashboard
+  if (pathname.startsWith('/client-portal') && isAdmin) {
     const dashboardUrl = new URL('/dashboard', request.url);
     return NextResponse.redirect(dashboardUrl);
   }
 
-  // Utilisateur authentifié, continuer
+  // Si l'utilisateur est authentifié et essaie d'accéder à /login, rediriger selon le role_id
+  if (pathname === '/login') {
+    if (isAdmin) {
+      const dashboardUrl = new URL('/dashboard', request.url);
+      return NextResponse.redirect(dashboardUrl);
+    } else {
+      const clientPortalUrl = new URL('/client-portal', request.url);
+      return NextResponse.redirect(clientPortalUrl);
+    }
+  }
+
+  // Utilisateur authentifié avec les bonnes permissions, continuer
   return NextResponse.next();
 }
 

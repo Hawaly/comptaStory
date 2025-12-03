@@ -248,7 +248,7 @@ export default function EditInvoicePage() {
     return (
       <>
         <Header title="Chargement..." />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <Loader2 className="w-10 h-10 animate-spin text-blue-600 mx-auto mb-4" />
             <p className="text-gray-900 font-semibold">Chargement de la facture...</p>
@@ -262,7 +262,7 @@ export default function EditInvoicePage() {
     return (
       <>
         <Header title="Erreur" />
-        <main className="p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="bg-red-50 border-2 border-red-300 rounded-lg p-6">
             <p className="text-red-900 font-semibold">{error}</p>
             <Link href="/factures" className="inline-block mt-4 text-red-700 hover:text-red-900 font-bold">
@@ -277,7 +277,7 @@ export default function EditInvoicePage() {
   return (
     <>
       <Header title={`Éditer ${invoice?.invoice_number || 'facture'}`} />
-      <main className="p-8">
+      <main className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <Link
             href={`/factures/${invoiceId}`}
@@ -473,17 +473,17 @@ export default function EditInvoicePage() {
           </div>
 
           {/* Boutons */}
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
             <Link
               href={`/factures/${invoiceId}`}
-              className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-900 font-bold hover:bg-gray-50 transition-colors"
+              className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-900 font-bold hover:bg-gray-50 transition-colors text-center"
             >
               Annuler
             </Link>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 font-bold"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 font-bold"
             >
               {isSaving ? (
                 <>

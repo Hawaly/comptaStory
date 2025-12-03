@@ -33,7 +33,9 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
+      // Rediriger selon le rôle de l'utilisateur
+      const redirectPath = data.redirect_path || "/dashboard";
+      router.push(redirectPath);
       router.refresh();
     } catch {
       setError("Impossible de se connecter au serveur");
@@ -81,20 +83,20 @@ export default function LoginPage() {
               htmlFor="username" 
               className="block text-sm font-medium text-slate-700 mb-2"
             >
-              Nom d&apos;utilisateur
+              Email
             </label>
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
               <input
                 id="username"
-                type="text"
+                type="email"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin"
+                placeholder="admin@yourstory.ch"
                 className="w-full pl-12 pr-4 py-3.5 border border-slate-200 rounded-xl bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 disabled:bg-slate-100 disabled:cursor-not-allowed text-slate-900 transition-all"
                 required
                 disabled={isLoading}
-                autoComplete="username"
+                autoComplete="email"
               />
             </div>
           </div>

@@ -94,7 +94,7 @@ export function MandatForm({ mandat, clientId, mode }: MandatFormProps) {
       )}
 
       {/* Informations principales */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Informations du mandat
         </h3>
@@ -170,7 +170,7 @@ export function MandatForm({ mandat, clientId, mode }: MandatFormProps) {
       </div>
 
       {/* Dates */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Période du mandat
         </h3>
@@ -208,12 +208,12 @@ export function MandatForm({ mandat, clientId, mode }: MandatFormProps) {
       </div>
 
       {/* Boutons d'action */}
-      <div className="flex justify-end space-x-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 sm:space-x-4">
         <button
           type="button"
           onClick={handleCancel}
           disabled={isLoading}
-          className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-900 font-bold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+          className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-900 font-bold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
         >
           <X className="w-4 h-4" />
           <span>Annuler</span>
@@ -221,7 +221,7 @@ export function MandatForm({ mandat, clientId, mode }: MandatFormProps) {
         <button
           type="submit"
           disabled={isLoading}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 font-bold"
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 font-bold"
         >
           {isLoading ? (
             <>

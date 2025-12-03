@@ -53,7 +53,7 @@ export function InvoiceItemsForm({ items, onChange }: InvoiceItemsFormProps) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
         <h3 className="text-lg font-bold text-gray-900">
           Lignes de facturation
         </h3>
@@ -80,9 +80,9 @@ export function InvoiceItemsForm({ items, onChange }: InvoiceItemsFormProps) {
               key={index}
               className="bg-gray-50 rounded-lg p-4 border-2 border-gray-200"
             >
-              <div className="grid grid-cols-12 gap-3 items-start">
+              <div className="grid grid-cols-12 gap-2 sm:gap-3 items-start">
                 {/* Description */}
-                <div className="col-span-12 md:col-span-5">
+                <div className="col-span-12 lg:col-span-5">
                   <label className="block text-xs font-bold text-gray-900 mb-1">
                     Description
                   </label>
@@ -97,7 +97,7 @@ export function InvoiceItemsForm({ items, onChange }: InvoiceItemsFormProps) {
                 </div>
 
                 {/* Quantité */}
-                <div className="col-span-4 md:col-span-2">
+                <div className="col-span-6 sm:col-span-4 lg:col-span-2">
                   <label className="block text-xs font-bold text-gray-900 mb-1">
                     Qté
                   </label>
@@ -113,7 +113,7 @@ export function InvoiceItemsForm({ items, onChange }: InvoiceItemsFormProps) {
                 </div>
 
                 {/* Prix unitaire */}
-                <div className="col-span-4 md:col-span-2">
+                <div className="col-span-6 sm:col-span-4 lg:col-span-2">
                   <label className="block text-xs font-bold text-gray-900 mb-1">
                     Prix unit. (CHF)
                   </label>
@@ -129,7 +129,7 @@ export function InvoiceItemsForm({ items, onChange }: InvoiceItemsFormProps) {
                 </div>
 
                 {/* Total */}
-                <div className="col-span-3 md:col-span-2">
+                <div className="col-span-10 sm:col-span-3 lg:col-span-2">
                   <label className="block text-xs font-bold text-gray-900 mb-1">
                     Total
                   </label>
@@ -139,7 +139,7 @@ export function InvoiceItemsForm({ items, onChange }: InvoiceItemsFormProps) {
                 </div>
 
                 {/* Bouton supprimer */}
-                <div className="col-span-1 md:col-span-1 flex items-end">
+                <div className="col-span-2 sm:col-span-1 flex items-end justify-end">
                   <button
                     type="button"
                     onClick={() => handleRemoveLine(index)}

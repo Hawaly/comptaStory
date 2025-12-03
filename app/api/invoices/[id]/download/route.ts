@@ -25,6 +25,13 @@ export async function GET(
     // Get the download URL (signed URL for Supabase, local path for dev)
     const downloadUrl = await getDownloadUrl(invoice.pdf_path);
     
+    // NextResponse.redirect requires an absolute URL
+    // If it's a relative path, convert to absolute using the request origin
+    if (downloadUrl.startsWith('/')) {
+      const absoluteUrl = new URL(downloadUrl, request.url);
+      return NextResponse.redirect(absoluteUrl);
+    }
+    
     return NextResponse.redirect(downloadUrl);
 
   } catch (error: unknown) {

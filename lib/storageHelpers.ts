@@ -220,10 +220,6 @@ export async function getDownloadUrl(filePath: string): Promise<string> {
     }
   }
 
-  // Assume it's a Supabase path - get signed URL in production
-  if (!shouldUseLocalStorage()) {
-    return await getSignedUrl(filePath);
-  }
-  
-  return filePath;
+  // For Supabase paths, always get a signed URL (works in both dev and prod)
+  return await getSignedUrl(filePath);
 }
