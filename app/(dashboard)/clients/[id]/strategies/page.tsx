@@ -87,7 +87,7 @@ export default function ClientStrategiesPage() {
       console.error("Erreur lors du chargement des stratégies:", error);
     }
   }
-
+//easy
   async function handleSaveStrategy(data: Partial<SocialMediaStrategyInsert>) {
     try {
       if (selectedStrategy) {
